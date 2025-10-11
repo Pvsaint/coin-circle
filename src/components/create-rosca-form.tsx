@@ -150,7 +150,7 @@ export function CreateRoscaForm() {
                 rows={4}
               />
               <p className="text-sm text-muted-foreground">
-                Help potential members understand your group's goals
+                Help potential members understand your group&apos;s goals
               </p>
             </div>
 

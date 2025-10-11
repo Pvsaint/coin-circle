@@ -14,7 +14,7 @@ interface MemberListProps {
   currentCycle: number
 }
 
-export function MemberList({ members, currentCycle }: MemberListProps) {
+export function MemberList({ members }: MemberListProps) {
   return (
     <Card>
       <CardHeader>
@@ -22,7 +22,7 @@ export function MemberList({ members, currentCycle }: MemberListProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          {members.map((member, index) => (
+          {members.map((member) => (
             <div
               key={member.address}
               className="flex items-center justify-between rounded-lg border border-border p-4 hover:bg-muted/50 transition-colors"

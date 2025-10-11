@@ -22,7 +22,7 @@ export function MemberStatusCard({
   totalCycles,
   nextPaymentDue,
   payoutCycle,
-  contributionAmount,
+  // contributionAmount,
   token,
   contributionHistory,
 }: MemberStatusCardProps) {

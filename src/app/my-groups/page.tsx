@@ -57,8 +57,8 @@ export default function MyGroupsPage() {
               </div>
               <h3 className="text-xl font-semibold mb-2">No groups yet</h3>
               <p className="text-muted-foreground mb-6 text-center text-balance">
-                You haven't joined any ROSCA groups yet. Create one or browse
-                existing groups to get started.
+                You haven&apos;t joined any ROSCA groups yet. Create one or
+                browse existing groups to get started.
               </p>
               <div className="flex gap-4">
                 <Button asChild>
