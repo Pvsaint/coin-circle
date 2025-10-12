@@ -80,8 +80,8 @@ export default function GroupDetailsPage({ params }: { params: { id: string } })
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="px-32 py-12">
-        <div className="mb-6">
+      <main className="px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-6 sm:py-8 md:py-12">
+        <div className="mb-4 sm:mb-6">
           <NotificationBanner
             type="warning"
             title="Payment Due Soon"
@@ -93,46 +93,58 @@ export default function GroupDetailsPage({ params }: { params: { id: string } })
           />
         </div>
 
-        <div className="mb-8">
-          <Button variant="ghost" className="gap-2 mb-4" asChild>
+        <div className="mb-6 sm:mb-8">
+          <Button variant="ghost" className="gap-2 mb-4 -ml-2" asChild>
             <Link href="/">
               <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           </Button>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-4xl font-bold tracking-tight">{groupData.name}</h1>
-                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+            <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+                  {groupData.name}
+                </h1>
+                <Badge 
+                  variant="outline" 
+                  className="bg-primary/10 text-primary border-primary/20 w-fit"
+                >
                   Active
                 </Badge>
               </div>
-              <p className="text-lg text-muted-foreground mb-4">{groupData.description}</p>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-3 sm:mb-4">
+                {groupData.description}
+              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs sm:text-sm text-muted-foreground">
                 <span>Contract:</span>
-                <code className="rounded bg-muted px-2 py-1 font-mono text-xs">{groupData.contractAddress}</code>
-                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                  <ExternalLink className="h-3 w-3" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <code className="rounded bg-muted px-2 py-1 font-mono text-xs break-all">
+                    {groupData.contractAddress}
+                  </code>
+                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0 flex-shrink-0">
+                    <ExternalLink className="h-3 w-3" />
+                  </Button>
+                </div>
               </div>
             </div>
 
             {isMember ? (
-              <Button size="lg" className="sm:w-auto w-full">
+              <Button size="lg" className="w-full sm:w-auto sm:flex-shrink-0">
                 Contribute Now
               </Button>
             ) : (
-              <Button size="lg" className="sm:w-auto w-full">
+              <Button size="lg" className="w-full sm:w-auto sm:flex-shrink-0">
                 Join Group
               </Button>
             )}
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="space-y-6">
+        <div className="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 lg:grid-cols-2">
+          <div className="space-y-4 sm:space-y-5 md:space-y-6">
             <GroupStatusCard
               totalPot={groupData.totalPot}
               token={groupData.token}

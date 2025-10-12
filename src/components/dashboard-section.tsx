@@ -1,7 +1,7 @@
-import { RoscaCard } from "@/components/rosca-card"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import Link from "next/link"
+import { RoscaCard } from "@/components/rosca-card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 export function DashboardSection() {
   // Mock data - in production, this would come from smart contracts
@@ -39,16 +39,24 @@ export function DashboardSection() {
       status: "full" as const,
       description: "Supporting local community projects together",
     },
-  ]
+  ];
 
   return (
-    <section className="py-16 px-32">
-      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <section className="py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32">
+      <div className="mb-8 sm:mb-10 md:mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight mb-2">Available Groups</h2>
-          <p className="text-muted-foreground">Join an existing group or create your own</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
+            Available Groups
+          </h2>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Join an existing group or create your own
+          </p>
         </div>
-        <Button size="lg" className="gap-2" asChild>
+        <Button
+          size="lg"
+          className="gap-2 bg-green-900 text-white w-full sm:w-auto"
+          asChild
+        >
           <Link href="/create">
             <Plus className="h-4 w-4" />
             Create New Group
@@ -56,17 +64,22 @@ export function DashboardSection() {
         </Button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {openGroups.map((group) => (
           <RoscaCard key={group.id} {...group} />
         ))}
       </div>
 
-      <div className="mt-8 text-center">
-        <Button variant="outline" size="lg" asChild>
+      <div className="mt-6 sm:mt-8 text-center">
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full sm:w-auto"
+          asChild
+        >
           <Link href="/browse">View All Groups</Link>
         </Button>
       </div>
     </section>
-  )
+  );
 }

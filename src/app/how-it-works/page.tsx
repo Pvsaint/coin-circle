@@ -37,12 +37,12 @@ export default function HowItWorksPage() {
     <div className="min-h-screen">
       <Header />
       <main>
-        <section className="py-16">
-          <div className="mx-auto max-w-3xl text-center mb-16">
-            <h1 className="text-5xl font-bold tracking-tight mb-6">
+        <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6 md:px-8">
+          <div className="mx-auto max-w-3xl text-center mb-12 sm:mb-14 md:mb-16">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 sm:mb-6">
               How StarkROSCA Works
             </h1>
-            <p className="text-xl text-muted-foreground text-balance leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground text-balance leading-relaxed px-4 sm:px-0">
               Learn how decentralized rotating savings and credit associations
               help communities save together on Starknet
             </p>
@@ -51,22 +51,22 @@ export default function HowItWorksPage() {
 
         <HowItWorks />
 
-        <section className="py-16">
+        <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6 md:px-8">
           <div className="mx-auto max-w-4xl">
-            <h2 className="text-3xl font-bold tracking-tight mb-8 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-6 sm:mb-8 text-center">
               Key Features
             </h2>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 md:grid-cols-2">
               {features.map((feature, index) => (
                 <Card key={index}>
                   <CardContent className="pt-6">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4">
+                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-3 sm:mb-4">
                       {feature.icon}
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2">
                       {feature.title}
                     </h3>
-                    <p className="text-muted-foreground text-balance leading-relaxed">
+                    <p className="text-sm sm:text-base text-muted-foreground text-balance leading-relaxed">
                       {feature.description}
                     </p>
                   </CardContent>
@@ -76,20 +76,25 @@ export default function HowItWorksPage() {
           </div>
         </section>
 
-        <section className="py-16">
+        <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6 md:px-8">
           <Card className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 border-2">
-            <CardContent className="py-12 text-center">
-              <h2 className="text-3xl font-bold tracking-tight mb-4">
+            <CardContent className="py-8 sm:py-10 md:py-12 px-4 sm:px-6 text-center">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3 sm:mb-4">
                 Ready to Get Started?
               </h2>
-              <p className="text-lg text-muted-foreground mb-8 text-balance">
+              <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 text-balance">
                 Join a savings circle today or create your own group
               </p>
-              <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-                <Button size="lg" asChild>
+              <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:justify-center">
+                <Button size="lg" className="w-full sm:w-auto" asChild>
                   <Link href="/create">Create New Group</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  asChild
+                >
                   <Link href="/browse">Browse Groups</Link>
                 </Button>
               </div>

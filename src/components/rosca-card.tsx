@@ -40,7 +40,7 @@ export function RoscaCard({
   }
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 hover:border-primary/50">
+    <Card className="border-green-900 group hover:shadow-lg transition-all duration-300 hover:border-primary/50">
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
@@ -79,7 +79,7 @@ export function RoscaCard({
 
       <CardFooter>
         <Button
-          className="w-full gap-2 group-hover:bg-primary group-hover:text-primary-foreground"
+          className="w-full gap-2 bg-green-900 text-white group-hover:bg-[#4a571d] border-0"
           variant={status === "open" ? "default" : "outline"}
           asChild
         >

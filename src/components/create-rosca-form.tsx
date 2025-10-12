@@ -65,13 +65,13 @@ export function CreateRoscaForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-3xl">
-      <div className="mb-8">
+    <form onSubmit={handleSubmit} className="mx-auto max-w-3xl px-4 sm:px-0">
+      <div className="mb-6 sm:mb-8">
         <div className="flex items-center justify-between mb-4">
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center flex-1">
               <div
-                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold transition-colors ${
+                className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border-2 text-sm sm:text-base font-semibold transition-colors ${
                   step >= s
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-border bg-background text-muted-foreground"
@@ -89,7 +89,7 @@ export function CreateRoscaForm() {
             </div>
           ))}
         </div>
-        <div className="min-w-3xl flex justify-between text-sm">
+        <div className="flex justify-between text-xs sm:text-sm">
           <span
             className={
               step >= 1
@@ -123,33 +123,41 @@ export function CreateRoscaForm() {
       {step === 1 && (
         <Card>
           <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">
+              Basic Information
+            </CardTitle>
+            <CardDescription className="text-sm sm:text-base">
               Give your ROSCA group a name and description
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="groupName">Group Name *</Label>
+              <Label htmlFor="groupName" className="text-sm sm:text-base">
+                Group Name *
+              </Label>
               <Input
                 id="groupName"
                 placeholder="e.g., Family Savings, Startup Seed Fund"
                 value={formData.groupName}
                 onChange={(e) => updateField("groupName", e.target.value)}
                 required
+                className="text-sm sm:text-base"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-sm sm:text-base">
+                Description
+              </Label>
               <Textarea
                 id="description"
                 placeholder="Describe the purpose and rules of your ROSCA group..."
                 value={formData.description}
                 onChange={(e) => updateField("description", e.target.value)}
                 rows={4}
+                className="text-sm sm:text-base"
               />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Help potential members understand your group&apos;s goals
               </p>
             </div>
@@ -170,15 +178,20 @@ export function CreateRoscaForm() {
       {step === 2 && (
         <Card>
           <CardHeader>
-            <CardTitle>Group Parameters</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">
+              Group Parameters
+            </CardTitle>
+            <CardDescription className="text-sm sm:text-base">
               Set the contribution amount, frequency, and member count
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-6 sm:grid-cols-2">
+          <CardContent className="space-y-4 sm:space-y-6">
+            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="contributionAmount">
+                <Label
+                  htmlFor="contributionAmount"
+                  className="text-sm sm:text-base"
+                >
                   Contribution Amount *
                 </Label>
                 <Input
@@ -191,16 +204,19 @@ export function CreateRoscaForm() {
                     updateField("contributionAmount", e.target.value)
                   }
                   required
+                  className="text-sm sm:text-base"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="token">Token *</Label>
+                <Label htmlFor="token" className="text-sm sm:text-base">
+                  Token *
+                </Label>
                 <Select
                   value={formData.token}
                   onValueChange={(value) => updateField("token", value)}
                 >
-                  <SelectTrigger id="token">
+                  <SelectTrigger id="token" className="text-sm sm:text-base">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -213,9 +229,14 @@ export function CreateRoscaForm() {
               </div>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2">
+            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="numberOfMembers">Number of Members *</Label>
+                <Label
+                  htmlFor="numberOfMembers"
+                  className="text-sm sm:text-base"
+                >
+                  Number of Members *
+                </Label>
                 <Input
                   id="numberOfMembers"
                   type="number"
@@ -227,19 +248,25 @@ export function CreateRoscaForm() {
                     updateField("numberOfMembers", e.target.value)
                   }
                   required
+                  className="text-sm sm:text-base"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Between 2 and 20 members
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="frequency">Contribution Frequency *</Label>
+                <Label htmlFor="frequency" className="text-sm sm:text-base">
+                  Contribution Frequency *
+                </Label>
                 <Select
                   value={formData.frequency}
                   onValueChange={(value) => updateField("frequency", value)}
                 >
-                  <SelectTrigger id="frequency">
+                  <SelectTrigger
+                    id="frequency"
+                    className="text-sm sm:text-base"
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -253,14 +280,16 @@ export function CreateRoscaForm() {
 
             <Alert>
               <InfoIcon className="h-4 w-4" />
-              <AlertDescription>
+              <AlertDescription className="text-xs sm:text-sm">
                 <strong>Cycle Length:</strong> {calculateCycleLength()} for{" "}
                 {formData.numberOfMembers || "all"} members
               </AlertDescription>
             </Alert>
 
             <div className="space-y-2">
-              <Label htmlFor="collateral">Collateral Amount (Optional)</Label>
+              <Label htmlFor="collateral" className="text-sm sm:text-base">
+                Collateral Amount (Optional)
+              </Label>
               <Input
                 id="collateral"
                 type="number"
@@ -268,18 +297,19 @@ export function CreateRoscaForm() {
                 placeholder="0"
                 value={formData.collateral}
                 onChange={(e) => updateField("collateral", e.target.value)}
+                className="text-sm sm:text-base"
               />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Security deposit returned after successful completion
               </p>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setStep(1)}
-                className="flex-1 gap-2"
+                className="flex-1 gap-2 w-full"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back
@@ -287,7 +317,7 @@ export function CreateRoscaForm() {
               <Button
                 type="button"
                 onClick={() => setStep(3)}
-                className="flex-1 gap-2"
+                className="flex-1 gap-2 w-full"
                 disabled={
                   !formData.contributionAmount ||
                   !formData.numberOfMembers ||
@@ -305,59 +335,73 @@ export function CreateRoscaForm() {
       {step === 3 && (
         <Card>
           <CardHeader>
-            <CardTitle>Review & Create</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">
+              Review & Create
+            </CardTitle>
+            <CardDescription className="text-sm sm:text-base">
               Review your ROSCA details before creating
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="rounded-lg border border-border bg-muted/50 p-6 space-y-4">
+          <CardContent className="space-y-4 sm:space-y-6">
+            <div className="rounded-lg border border-border bg-muted/50 p-4 sm:p-6 space-y-4">
               <div>
-                <h3 className="text-lg font-semibold mb-4">
+                <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">
                   {formData.groupName}
                 </h3>
                 {formData.description && (
-                  <p className="text-sm text-muted-foreground mb-4 text-balance">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-4 text-balance">
                     {formData.description}
                   </p>
                 )}
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-3 sm:gap-4 grid-cols-2">
                 <div>
-                  <p className="text-sm text-muted-foreground">Contribution</p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Contribution
+                  </p>
+                  <p className="text-sm sm:text-lg font-semibold break-all">
                     {formData.contributionAmount} {formData.token}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Frequency</p>
-                  <p className="text-lg font-semibold capitalize">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Frequency
+                  </p>
+                  <p className="text-sm sm:text-lg font-semibold capitalize">
                     {formData.frequency}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Members</p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Members
+                  </p>
+                  <p className="text-sm sm:text-lg font-semibold">
                     {formData.numberOfMembers}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Pot</p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Total Pot
+                  </p>
+                  <p className="text-sm sm:text-lg font-semibold break-all">
                     {totalPot()} {formData.token}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Cycle Length</p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Cycle Length
+                  </p>
+                  <p className="text-sm sm:text-lg font-semibold">
                     {calculateCycleLength()}
                   </p>
                 </div>
                 {formData.collateral && (
                   <div>
-                    <p className="text-sm text-muted-foreground">Collateral</p>
-                    <p className="text-lg font-semibold">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      Collateral
+                    </p>
+                    <p className="text-sm sm:text-lg font-semibold break-all">
                       {formData.collateral} {formData.token}
                     </p>
                   </div>
@@ -367,23 +411,23 @@ export function CreateRoscaForm() {
 
             <Alert>
               <InfoIcon className="h-4 w-4" />
-              <AlertDescription>
+              <AlertDescription className="text-xs sm:text-sm">
                 Creating this ROSCA will deploy a smart contract on Starknet.
                 Make sure all details are correct.
               </AlertDescription>
             </Alert>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setStep(2)}
-                className="flex-1 gap-2"
+                className="flex-1 gap-2 w-full"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back
               </Button>
-              <Button type="submit" className="flex-1">
+              <Button type="submit" className="flex-1 w-full">
                 Create ROSCA Group
               </Button>
             </div>

@@ -73,47 +73,49 @@ export default function BrowsePage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="py-12 px-32">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight mb-2">
+      <main className="py-6 sm:py-8 md:py-12 px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2">
             Browse CoinCircle Groups
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground">
             Find and join savings circles that match your goals
           </p>
         </div>
 
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row">
+        <div className="mb-6 sm:mb-8 flex flex-col gap-3 sm:gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search groups..." className="pl-9" />
+            <Input placeholder="Search groups..." className="pl-9 h-10 sm:h-11" />
           </div>
-          <Select defaultValue="all">
-            <SelectTrigger className="sm:w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="open">Open</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="full">Full</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select defaultValue="all-tokens">
-            <SelectTrigger className="sm:w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-tokens">All Tokens</SelectItem>
-              <SelectItem value="usdc">USDC</SelectItem>
-              <SelectItem value="eth">ETH</SelectItem>
-              <SelectItem value="dai">DAI</SelectItem>
-              <SelectItem value="strk">STRK</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <Select defaultValue="all">
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="open">Open</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="full">Full</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select defaultValue="all-tokens">
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all-tokens">All Tokens</SelectItem>
+                <SelectItem value="usdc">USDC</SelectItem>
+                <SelectItem value="eth">ETH</SelectItem>
+                <SelectItem value="dai">DAI</SelectItem>
+                <SelectItem value="strk">STRK</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {allGroups.map((group) => (
             <RoscaCard key={group.id} {...group} />
           ))}
