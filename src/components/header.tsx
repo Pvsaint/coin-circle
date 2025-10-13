@@ -1,16 +1,38 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Wallet, Menu, X } from "lucide-react";
+import { Wallet, Menu, X, Plus, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useAccount, useDisconnect } from "@starknet-react/core";
+import { ConnectButton } from "../components/blockchain/connect-button";
+import WalletDisconnectModal from "../components/blockchain/Wallet-disconnect-modal";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false);
+
   const pathname = usePathname();
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect({});
+
+  const handleConnectWallet = () => {
+    if (!isConnected) {
+      setIsModalOpen(true);
+    } else {
+      setIsDisconnectModalOpen(true);
+    }
+  };
+
+  const handleDisconnect = () => {
+    disconnect();
+    setIsDisconnectModalOpen(false);
+  };
 
   const isActive = (path: string) => pathname === path;
 
@@ -18,6 +40,7 @@ export function Header() {
     <>
       <header className="sticky top-2 sm:top-4 z-50 w-[95%] sm:w-[90%] max-w-6xl mx-auto border-2 sm:border-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-full shadow-sm">
         <div className="px-4 sm:px-8 lg:px-16 flex h-14 sm:h-16 items-center justify-between">
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-primary">
               <svg
@@ -52,54 +75,57 @@ export function Header() {
             <span className="text-lg sm:text-xl font-semibold">CoinCircle</span>
           </Link>
 
+          {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-6">
-            <Link
-              href="/browse"
-              className={`text-sm font-medium transition-colors ${
-                isActive("/browse")
-                  ? "text-foreground font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Browse Groups
-            </Link>
-            <Link
-              href="/my-groups"
-              className={`text-sm font-medium transition-colors ${
-                isActive("/my-groups")
-                  ? "text-foreground font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              My Groups
-            </Link>
-            <Link
-              href="/how-it-works"
-              className={`text-sm font-medium transition-colors ${
-                isActive("/how-it-works")
-                  ? "text-foreground font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              How It Works
-            </Link>
+            {[
+              { href: "/browse", label: "Browse Groups" },
+              { href: "/my-groups", label: "My Groups" },
+              { href: "/how-it-works", label: "How It Works" },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium transition-colors ${
+                  isActive(link.href)
+                    ? "text-foreground font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
+          {/* Wallet + Menu */}
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="hidden sm:flex items-center gap-2">
               <ThemeToggle />
               <NotificationsDropdown />
             </div>
+
+            {/* ✅ Connect / Disconnect Wallet Button */}
             <Button
-              className="hidden sm:inline-flex gap-2 bg-green-900 hover:bg-[#4a571d] text-white border-0"
+              className="hidden sm:inline-flex gap-2 cursor-pointer bg-green-900 hover:bg-[#4a571d] text-white border-0"
               size="sm"
+              onClick={handleConnectWallet}
             >
-              <Wallet className="h-4 w-4" />
-              <span className="hidden md:inline">Connect Wallet</span>
-              <span className="md:hidden">Connect</span>
+              {isConnected ? (
+                <div className="flex items-center gap-2">
+                  <span>
+                    {address?.slice(0, 6)}...{address?.slice(-4)}
+                  </span>
+                  <Plus className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4" />
+                </div>
+              ) : (
+                <>
+                  <Wallet className="h-4 w-4" />
+                  <span className="hidden md:inline">Connect Wallet</span>
+                </>
+              )}
             </Button>
 
-            {/* Mobile menu button */}
+            {/* Mobile Menu Toggle */}
             <Button
               variant="ghost"
               size="sm"
@@ -116,7 +142,7 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile menu */}
+      {/* ✅ Mobile Menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div
@@ -125,39 +151,24 @@ export function Header() {
           />
           <div className="absolute top-20 left-4 right-4 bg-background border-2 rounded-2xl shadow-lg p-6 space-y-4">
             <nav className="flex flex-col gap-4">
-              <Link
-                href="/browse"
-                className={`text-base font-medium transition-colors py-2 ${
-                  isActive("/browse")
-                    ? "text-foreground font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Browse Groups
-              </Link>
-              <Link
-                href="/my-groups"
-                className={`text-base font-medium transition-colors py-2 ${
-                  isActive("/my-groups")
-                    ? "text-foreground font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                My Groups
-              </Link>
-              <Link
-                href="/how-it-works"
-                className={`text-base font-medium transition-colors py-2 ${
-                  isActive("/how-it-works")
-                    ? "text-foreground font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                How It Works
-              </Link>
+              {[
+                { href: "/browse", label: "Browse Groups" },
+                { href: "/my-groups", label: "My Groups" },
+                { href: "/how-it-works", label: "How It Works" },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-base font-medium transition-colors py-2 ${
+                    isActive(link.href)
+                      ? "text-foreground font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </nav>
 
             <div className="pt-4 border-t flex flex-col gap-3">
@@ -171,14 +182,45 @@ export function Header() {
                 </span>
                 <NotificationsDropdown />
               </div>
-              <Button className="w-full gap-2 bg-green-900 hover:bg-[#4a571d] text-white border-0 mt-2">
-                <Wallet className="h-4 w-4" />
-                Connect Wallet
+              <Button
+                className="w-full gap-2 bg-green-900 cursor-pointer hover:bg-[#4a571d] text-white border-0 mt-2"
+                onClick={handleConnectWallet}
+              >
+                {isConnected ? (
+                  <div className="flex items-center gap-2">
+                    <span>
+                      {address?.slice(0, 6)}...{address?.slice(-4)}
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <Wallet className="h-4 w-4" />
+                    Connect Wallet
+                  </>
+                )}
               </Button>
             </div>
           </div>
         </div>
       )}
+
+      {/* ✅ Auto-connect Modal */}
+      {isModalOpen && (
+        <ConnectButton
+          isOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          onSelect={(walletId: string) =>
+            console.log("Selected wallet:", walletId)
+          }
+        />
+      )}
+
+      {/* ✅ Disconnect Modal */}
+      <WalletDisconnectModal
+        isOpen={isDisconnectModalOpen}
+        onClose={() => setIsDisconnectModalOpen(false)}
+        onDisconnect={handleDisconnect}
+      />
     </>
   );
 }
