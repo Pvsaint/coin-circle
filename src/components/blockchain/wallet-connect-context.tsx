@@ -1,6 +1,14 @@
+"use client";
 
-"use client"
-import React, { createContext, useContext, ReactNode, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { AccountStatus, useAccount, useConnect } from "@starknet-react/core";
 
 // Define the context type
@@ -8,65 +16,102 @@ interface WalletContextType {
   isConnected: boolean;
   address: string | undefined;
   isConnecting: boolean;
-  isWalletDetected: boolean; // Expose wallet detection state
+  isWalletDetected: boolean;
   error: Error | null;
   isModalOpen: boolean;
   openConnectModal: () => void;
   closeConnectModal: () => void;
+  clearError: () => void;
 }
 
 // Create the context
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
+interface WalletProviderProps {
+  children: ReactNode;
+}
+
 // Provider component
-export function WalletProvider({ children }: { children: ReactNode }) {
+export function WalletProvider({ children }: WalletProviderProps) {
   const { isConnected = false, address, status } = useAccount();
   const { connectors } = useConnect();
-  const [isWalletDetected, setIsWalletDetected] = useState(false); // Manage wallet detection state
+  const [isWalletDetected, setIsWalletDetected] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Check if any wallet is available in the browser
   useEffect(() => {
-    const hasWallet = connectors.some(connector => connector.available());
-    setIsWalletDetected(hasWallet);
+    const checkWalletAvailability = () => {
+      const hasWallet = connectors.some((connector) => connector.available());
+      setIsWalletDetected(hasWallet);
+    };
+
+    checkWalletAvailability();
   }, [connectors]);
 
   // Handle connection errors
   useEffect(() => {
-    if (status === "error" as AccountStatus) {
-      setError(new Error("Failed to connect wallet"));
-    } else {
+    if (status === ("error" as AccountStatus)) {
+      setError(new Error("Failed to connect wallet. Please try again."));
+    } else if (status === ("connected" as AccountStatus)) {
+      // Clear error when successfully connected
+      setError(null);
+    } else if (status === ("disconnected" as AccountStatus)) {
+      // Clear error when disconnected
       setError(null);
     }
   }, [status]);
 
-  // Function to open the connect modal from anywhere in the app
-  const openConnectModal = () => {
+  // Close modal automatically when wallet connects
+  useEffect(() => {
+    if (isConnected && isModalOpen) {
+      setIsModalOpen(false);
+    }
+  }, [isConnected, isModalOpen]);
+
+  // Memoized functions to prevent unnecessary re-renders
+  const openConnectModal = useCallback(() => {
     setIsModalOpen(true);
-  };
+    // Clear any previous errors when opening modal
+    setError(null);
+  }, []);
 
-  // Function to close the connect modal
-  const closeConnectModal = () => {
+  const closeConnectModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  // Context value
-  const value = {
-    isConnected,
-    address,
-    isConnecting: status === "connecting",
-    isWalletDetected, // Expose wallet detection state
-    error,
-    isModalOpen,
-    openConnectModal,
-    closeConnectModal
-  };
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  // Memoize context value to prevent unnecessary re-renders
+  const value = useMemo(
+    () => ({
+      isConnected,
+      address,
+      isConnecting: status === ("connecting" as AccountStatus),
+      isWalletDetected,
+      error,
+      isModalOpen,
+      openConnectModal,
+      closeConnectModal,
+      clearError,
+    }),
+    [
+      isConnected,
+      address,
+      status,
+      isWalletDetected,
+      error,
+      isModalOpen,
+      openConnectModal,
+      closeConnectModal,
+      clearError,
+    ]
+  );
 
   return (
-    <WalletContext.Provider value={value}>
-      {children}
-    </WalletContext.Provider>
+    <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
   );
 }
 
@@ -78,3 +123,6 @@ export function useWallet() {
   }
   return context;
 }
+
+// Export context for advanced use cases
+export { WalletContext };

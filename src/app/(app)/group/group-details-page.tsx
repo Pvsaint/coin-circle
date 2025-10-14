@@ -1,17 +1,22 @@
-"use client"
+"use client";
 
-import { Header } from "@/components/header"
-import { MemberStatusCard } from "@/components/member-status-card"
-import { GroupStatusCard } from "@/components/group-status-card"
-import { MemberList } from "@/components/member-list"
-import { NotificationBanner } from "@/components/notification-banner"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, ExternalLink } from "lucide-react"
-import Link from "next/link"
+import { Header } from "@/components/header";
+import { MemberStatusCard } from "@/components/member-status-card";
+import { GroupStatusCard } from "@/components/group-status-card";
+import { MemberList } from "@/components/member-list";
+import { NotificationBanner } from "@/components/notification-banner";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
-export default function GroupDetailsPage({ id }: { id: string }) {
-  const isMember = true
+interface GroupDetailsPageProps {
+  id: string;
+}
+
+export default function GroupDetailsPage({ id }: GroupDetailsPageProps) {
+
+  const isMember = true;
   const groupData = {
     id,
     name: "Family Savings Circle",
@@ -26,7 +31,7 @@ export default function GroupDetailsPage({ id }: { id: string }) {
     nextRecipient: "0x1234...5678",
     timeUntilPayout: "3 days",
     contractAddress: "0xabcd...ef01",
-  }
+  };
 
   const memberStatus = {
     currentCycle: 3,
@@ -36,13 +41,33 @@ export default function GroupDetailsPage({ id }: { id: string }) {
     contributionAmount: "100",
     token: "USDC",
     contributionHistory: [
-      { cycle: 1, amount: "100", date: "Dec 18, 2024", status: "paid" as const },
-      { cycle: 2, amount: "100", date: "Dec 25, 2024", status: "paid" as const },
+      {
+        cycle: 1,
+        amount: "100",
+        date: "Dec 18, 2024",
+        status: "paid" as const,
+      },
+      {
+        cycle: 2,
+        amount: "100",
+        date: "Dec 25, 2024",
+        status: "paid" as const,
+      },
       { cycle: 3, amount: "100", date: "Jan 1, 2025", status: "paid" as const },
-      { cycle: 4, amount: "100", date: "Jan 8, 2025", status: "pending" as const },
-      { cycle: 5, amount: "100", date: "Jan 15, 2025", status: "pending" as const },
+      {
+        cycle: 4,
+        amount: "100",
+        date: "Jan 8, 2025",
+        status: "pending" as const,
+      },
+      {
+        cycle: 5,
+        amount: "100",
+        date: "Jan 15, 2025",
+        status: "pending" as const,
+      },
     ],
-  }
+  };
 
   const members = [
     {
@@ -75,7 +100,7 @@ export default function GroupDetailsPage({ id }: { id: string }) {
       hasPaid: false,
       hasReceived: false,
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen">
@@ -108,8 +133,8 @@ export default function GroupDetailsPage({ id }: { id: string }) {
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
                   {groupData.name}
                 </h1>
-                <Badge 
-                  variant="outline" 
+                <Badge
+                  variant="outline"
                   className="bg-primary/10 text-primary border-primary/20 w-fit"
                 >
                   Active
@@ -124,7 +149,11 @@ export default function GroupDetailsPage({ id }: { id: string }) {
                   <code className="rounded bg-muted px-2 py-1 font-mono text-xs break-all">
                     {groupData.contractAddress}
                   </code>
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0 flex-shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 flex-shrink-0"
+                  >
                     <ExternalLink className="h-3 w-3" />
                   </Button>
                 </div>
@@ -157,10 +186,13 @@ export default function GroupDetailsPage({ id }: { id: string }) {
           </div>
 
           <div>
-            <MemberList members={members} currentCycle={groupData.currentCycle} />
+            <MemberList
+              members={members}
+              currentCycle={groupData.currentCycle}
+            />
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }

@@ -1,16 +1,21 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Wallet, Menu, X, Plus, ChevronDown } from "lucide-react";
+import { Wallet, Menu, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { useAccount, useDisconnect } from "@starknet-react/core";
 import { ConnectButton } from "../components/blockchain/connect-button";
 import WalletDisconnectModal from "../components/blockchain/Wallet-disconnect-modal";
+
+const NAV_LINKS = [
+  { href: "/browse", label: "Browse Groups" },
+  { href: "/my-groups", label: "My Groups" },
+  { href: "/how-it-works", label: "How It Works" },
+] as const;
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,35 +24,84 @@ export function Header() {
 
   const pathname = usePathname();
   const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect({});
+  const { disconnect } = useDisconnect();
 
-  const handleConnectWallet = () => {
+  // Close connect modal when wallet connects
+  useEffect(() => {
+    if (isConnected && isModalOpen) {
+      setIsModalOpen(false);
+    }
+  }, [isConnected, isModalOpen]);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileMenuOpen]);
+
+  // Close mobile menu on ESC key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [mobileMenuOpen]);
+
+  const handleConnectWallet = useCallback(() => {
     if (!isConnected) {
       setIsModalOpen(true);
     } else {
       setIsDisconnectModalOpen(true);
     }
-  };
+  }, [isConnected]);
 
-  const handleDisconnect = () => {
+  const handleDisconnect = useCallback(() => {
     disconnect();
     setIsDisconnectModalOpen(false);
-  };
+  }, [disconnect]);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
 
   const isActive = (path: string) => pathname === path;
+
+  const formatAddress = (addr: string) => {
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
 
   return (
     <>
       <header className="sticky top-2 sm:top-4 z-50 w-[95%] sm:w-[90%] max-w-6xl mx-auto border-2 sm:border-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-full shadow-sm">
         <div className="px-4 sm:px-8 lg:px-16 flex h-14 sm:h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
             <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-primary">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
                 className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground"
                 xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
               >
                 <path
                   d="M12 2L2 7L12 12L22 7L12 2Z"
@@ -76,12 +130,8 @@ export function Header() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-6">
-            {[
-              { href: "/browse", label: "Browse Groups" },
-              { href: "/my-groups", label: "My Groups" },
-              { href: "/how-it-works", label: "How It Works" },
-            ].map((link) => (
+          <nav className="hidden lg:flex items-center gap-6" role="navigation">
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -90,31 +140,30 @@ export function Header() {
                     ? "text-foreground font-semibold"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
+                aria-current={isActive(link.href) ? "page" : undefined}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          {/* Wallet + Menu */}
+          {/* Actions */}
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="hidden sm:flex items-center gap-2">
               <ThemeToggle />
               <NotificationsDropdown />
             </div>
 
-            {/* ✅ Connect / Disconnect Wallet Button */}
+            {/* Connect / Disconnect Wallet Button */}
             <Button
-              className="hidden sm:inline-flex gap-2 cursor-pointer bg-green-900 hover:bg-[#4a571d] text-white border-0"
+              className="hidden sm:inline-flex gap-2 bg-green-900 hover:bg-[#4a571d] text-white border-0"
               size="sm"
               onClick={handleConnectWallet}
+              aria-label={isConnected ? "Manage wallet" : "Connect wallet"}
             >
-              {isConnected ? (
+              {isConnected && address ? (
                 <div className="flex items-center gap-2">
-                  <span>
-                    {address?.slice(0, 6)}...{address?.slice(-4)}
-                  </span>
-                  <Plus className="h-4 w-4" />
+                  <span>{formatAddress(address)}</span>
                   <ChevronDown className="h-4 w-4" />
                 </div>
               ) : (
@@ -131,6 +180,8 @@ export function Header() {
               size="sm"
               className="lg:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -142,20 +193,22 @@ export function Header() {
         </div>
       </header>
 
-      {/* ✅ Mobile Menu */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
+        <div
+          className="fixed inset-0 z-40 lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile menu"
+        >
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={closeMobileMenu}
+            aria-hidden="true"
           />
-          <div className="absolute top-20 left-4 right-4 bg-background border-2 rounded-2xl shadow-lg p-6 space-y-4">
-            <nav className="flex flex-col gap-4">
-              {[
-                { href: "/browse", label: "Browse Groups" },
-                { href: "/my-groups", label: "My Groups" },
-                { href: "/how-it-works", label: "How It Works" },
-              ].map((link) => (
+          <div className="absolute top-20 left-4 right-4 bg-background border-2 rounded-2xl shadow-lg p-6 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+            <nav className="flex flex-col gap-4" role="navigation">
+              {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -164,7 +217,8 @@ export function Header() {
                       ? "text-foreground font-semibold"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
+                  aria-current={isActive(link.href) ? "page" : undefined}
                 >
                   {link.label}
                 </Link>
@@ -172,25 +226,28 @@ export function Header() {
             </nav>
 
             <div className="pt-4 border-t flex flex-col gap-3">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Theme</span>
                 <ThemeToggle />
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">
                   Notifications
                 </span>
                 <NotificationsDropdown />
               </div>
               <Button
-                className="w-full gap-2 bg-green-900 cursor-pointer hover:bg-[#4a571d] text-white border-0 mt-2"
-                onClick={handleConnectWallet}
+                className="w-full gap-2 bg-green-900 hover:bg-[#4a571d] text-white border-0 mt-2"
+                onClick={() => {
+                  handleConnectWallet();
+                  closeMobileMenu();
+                }}
+                aria-label={isConnected ? "Manage wallet" : "Connect wallet"}
               >
-                {isConnected ? (
+                {isConnected && address ? (
                   <div className="flex items-center gap-2">
-                    <span>
-                      {address?.slice(0, 6)}...{address?.slice(-4)}
-                    </span>
+                    <span>{formatAddress(address)}</span>
+                    <ChevronDown className="h-4 w-4" />
                   </div>
                 ) : (
                   <>
@@ -204,18 +261,23 @@ export function Header() {
         </div>
       )}
 
-      {/* ✅ Auto-connect Modal */}
+      {/* Connect Modal */}
       {isModalOpen && (
         <ConnectButton
           isOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
-          onSelect={(walletId: string) =>
-            console.log("Selected wallet:", walletId)
-          }
+          onConnectionSuccess={() => {
+            console.log("✅ Wallet connected successfully");
+            setIsModalOpen(false); // Ensure modal closes
+          }}
+          onConnectionError={(error) => {
+            console.error("❌ Connection failed:", error.message);
+            setIsModalOpen(false); // Ensure modal closes on error too
+          }}
         />
       )}
 
-      {/* ✅ Disconnect Modal */}
+      {/* Disconnect Modal */}
       <WalletDisconnectModal
         isOpen={isDisconnectModalOpen}
         onClose={() => setIsDisconnectModalOpen(false)}

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="w-full relative overflow-hidden bg-gradient-to-b from-black via-transparent to-black z-20 top-0">
+    <section className="w-full h-screen relative overflow-hidden bg-gradient-to-b from-black via-transparent to-black z-20 top-0">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-5"
         style={{
