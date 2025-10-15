@@ -130,7 +130,7 @@ export function NotificationsDropdown() {
             notifications.map((notification) => (
               <DropdownMenuItem
                 key={notification.id}
-                className={`flex flex-col items-start gap-2 p-3 sm:p-4 cursor-pointer ${
+                className={`flex flex-col items-start gap-2 p-3 mb-2 border sm:p-4 cursor-pointer ${
                   !notification.read ? "bg-primary/5" : ""
                 }`}
                 onClick={() => markAsRead(notification.id)}
